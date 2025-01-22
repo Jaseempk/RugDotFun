@@ -99,7 +99,7 @@ This project is a decentralized platform for launching tokens with an integrated
 ### **Steps**
 
 1. Clone the repository:
-
    ```bash
-
+   git clone https://github.com/Jaseempk/RugDotFun.git
+   cd RugDotFun
    ```
