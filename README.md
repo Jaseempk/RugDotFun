@@ -1,66 +1,105 @@
-## Foundry
+# Rug Token Factory and Bonding Curve
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This repository contains a set of smart contracts inspired by **pump.fun**, designed to deploy ERC20 tokens with an associated bonding curve mechanism. The system enables seamless token creation, initial supply allocation, and bonding curve-based token purchases, all while leveraging the power of Uniswap V3 for liquidity provision.
 
-Foundry consists of:
+---
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## **Overview**
 
-## Documentation
+This project is a decentralized platform for launching tokens with an integrated bonding curve. Similar to **pump.fun**, it allows users to create tokens, allocate initial supply, and purchase tokens through a bonding curve. Once the bonding curve reaches a specific funding threshold, the token "graduates" to a Uniswap V3 pool, enabling decentralized trading.
 
-https://book.getfoundry.sh/
+### **Key Features**
 
-## Usage
+- **Token Deployment**: Create ERC20 tokens with customizable names, symbols, and initial allocations.
+- **Bonding Curve**: Purchase tokens through an exponential bonding curve, with prices increasing as supply grows.
+- **Uniswap V3 Integration**: Automatically configure a Uniswap V3 pool once the bonding curve graduates.
+- **Dynamic Pricing**: Fair and transparent token pricing based on supply and demand.
+- **Gas Efficiency**: Optimized for low gas usage with custom errors and immutable variables.
+- **Foundry Integration**: Built and tested using Foundry for a streamlined development experience.
 
-### Build
+---
 
-```shell
-$ forge build
-```
+## **Contracts Overview**
 
-### Test
+### **1. `TokenFactory`**
 
-```shell
-$ forge test
-```
+- **Purpose**: Deploys new ERC20 tokens and their associated bonding curves.
+- **Key Features**:
+  - Token deployment with customizable metadata (name, symbol, description).
+  - Initial supply allocation (10% to specified addresses, 90% to the bonding curve).
+  - Bonding curve deployment for price discovery and token distribution.
+  - Event emission for off-chain tracking of deployments.
 
-### Format
+### **2. `BondingCurve`**
 
-```shell
-$ forge fmt
-```
+- **Purpose**: Implements an exponential bonding curve for token purchases and integrates with Uniswap V3 for liquidity provision.
+- **Key Features**:
+  - Exponential bonding curve formula for dynamic pricing.
+  - Graduation mechanism: Once 24 ETH is raised, the bonding curve graduates and configures a Uniswap V3 pool.
+  - Chainlink price feed integration for USD-based calculations.
+  - Dynamic scaling factor to adjust pricing based on supply proximity to the cap.
 
-### Gas Snapshots
+### **3. `TokenBoilerPlate`**
 
-```shell
-$ forge snapshot
-```
+- **Purpose**: Standard ERC20 token implementation with additional minting and burning functionality.
+- **Key Features**:
+  - Factory-only minting to prevent unauthorized inflation.
+  - Burn functionality for deflationary mechanisms.
+  - Initial token allocation during deployment.
 
-### Anvil
+---
 
-```shell
-$ anvil
-```
+## **How It Works**
 
-### Deploy
+### **1. Token Creation**
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+- A user deploys a new token using the `TokenFactory` contract.
+- The token is created with a specified name, symbol, and initial allocations.
+- 10% of the total supply is allocated to specified addresses, and 90% is allocated to the bonding curve.
 
-### Cast
+### **2. Token Purchase**
 
-```shell
-$ cast <subcommand>
-```
+- Users can purchase tokens from the bonding curve by sending ETH.
+- The price of tokens increases as the supply grows, following an exponential bonding curve formula.
 
-### Help
+### **3. Graduation to Uniswap V3**
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+- Once the bonding curve raises 24 ETH, it "graduates" and configures a Uniswap V3 pool for the token.
+- Liquidity is provided using the raised ETH and a portion of the token supply.
+
+### **4. Decentralized Trading**
+
+- After graduation, the token is tradable on Uniswap V3, enabling decentralized price discovery and liquidity provision.
+
+---
+
+## **Key Features**
+
+### **Inspired by pump.fun**
+
+- **Seamless Token Launch**: Easily create and launch tokens with minimal setup.
+- **Bonding Curve Mechanism**: Fair and transparent token pricing based on supply and demand.
+- **Graduation to AMM**: Transition from bonding curve to decentralized trading on Uniswap V3.
+
+### **Advanced Features**
+
+- **Dynamic Scaling**: Adjusts token pricing based on supply proximity to the cap.
+- **Chainlink Integration**: Fetches ETH/USD prices for USD-based calculations.
+- **Gas Optimization**: Uses custom errors and immutable variables for efficient gas usage.
+
+---
+
+## **Installation and Usage**
+
+### **Prerequisites**
+
+- [Foundry](https://book.getfoundry.sh/getting-started/installation) installed.
+- Ethereum wallet (e.g., MetaMask).
+
+### **Steps**
+
+1. Clone the repository:
+
+   ```bash
+
+   ```
