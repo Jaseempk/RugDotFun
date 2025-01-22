@@ -17,7 +17,7 @@ contract BondingCurveTest is Test {
     address deployer;
     address user1;
     address user2;
-    address communityToken;
+    address memeCoin;
 
     // Constants from the original contract
     uint256 constant MAX_SUPPLY = 100000000000 * 10 ** 18;
@@ -72,7 +72,7 @@ contract BondingCurveTest is Test {
             allocAmounts
         );
         vm.stopPrank();
-        communityToken = tokenAddress;
+        memeCoin = tokenAddress;
         bondingCurve = BondingCurve(_bondingCurve);
 
         // Get the created token and bonding curve
@@ -106,7 +106,7 @@ contract BondingCurveTest is Test {
             address tokenAddress,
             address creatorAddress,
             uint fundingRaised
-        ) = bondingCurve.communityCoinDeets();
+        ) = bondingCurve.memeCoinDeets();
 
         assertEq(name, "TestMemeCoin");
         assertEq(symbol, "TMC");
@@ -157,7 +157,7 @@ contract BondingCurveTest is Test {
     }
 
     // Test Buying Tokens
-    function test_buy_communityToken() public {
+    function test_buy_memeCoin() public {
         uint256 priceBefore = bondingCurve.getCurrentPrice();
         console.log("priceBefore:", priceBefore); //571385279910646
 
@@ -203,7 +203,7 @@ contract BondingCurveTest is Test {
         uint256 currentPrice = bondingCurve.getCurrentPrice(); //6412999996
         console.log("currentPrice:", currentPrice); //0.000000000300000000
         console.log("activeSupply:", bondingCurve.activeSupply());
-        (, , , , , , uint fundingRaised) = bondingCurve.communityCoinDeets(); //300000000
+        (, , , , , , uint fundingRaised) = bondingCurve.memeCoinDeets(); //300000000
         console.log("ethaccrued:", fundingRaised);
         console.log(
             "currentmrketcap:",
@@ -265,7 +265,7 @@ contract BondingCurveTest is Test {
     }
 
     function test_priceIn_usdc() public {
-        test_buy_communityToken();
+        test_buy_memeCoin();
         uint32 purchaseCostInUsd = 450;
         uint256 numTokens = bondingCurve.calculateCoinAmountOnUSDAmt(
             purchaseCostInUsd
@@ -290,12 +290,12 @@ contract BondingCurveTest is Test {
 
         // Expect the PoolConfigured event
         vm.expectEmit(true, true, false, true);
-        emit PoolConfigured(address(communityToken), WETH, 1); // First position ID should be 1
+        emit PoolConfigured(address(memeCoin), WETH, 1); // First position ID should be 1
 
         uint256 positionId = bondingCurve.configurePool(
             randomFee,
             randomTick,
-            address(communityToken),
+            address(memeCoin),
             WETH,
             TICK_SPACING,
             POSITION_MANAGER,
@@ -306,7 +306,7 @@ contract BondingCurveTest is Test {
 
         // Verify pool creation
         address expectedPool = IUniswapV3Factory(UNISWAP_V3_FACTORY).getPool(
-            address(communityToken),
+            address(memeCoin),
             WETH,
             randomFee
         );
@@ -347,7 +347,7 @@ contract BondingCurveTest is Test {
         bondingCurve.configurePool(
             FEE,
             INITIAL_TICK,
-            address(communityToken),
+            address(memeCoin),
             WETH,
             TICK_SPACING,
             POSITION_MANAGER,
@@ -358,7 +358,7 @@ contract BondingCurveTest is Test {
     }
 
     function test_ConfigurePool_WithRealPool() public {
-        test_buy_communityToken();
+        test_buy_memeCoin();
         vm.prank(address(bondingCurve));
         IWETH9(WETH).approve(POSITION_MANAGER, type(uint256).max);
         memeToken.approve(POSITION_MANAGER, type(uint256).max);
@@ -420,7 +420,7 @@ contract BondingCurveTest is Test {
         bondingCurve.configurePool(
             FEE,
             INITIAL_TICK,
-            address(communityToken),
+            address(memeCoin),
             WETH,
             TICK_SPACING,
             POSITION_MANAGER,
@@ -451,7 +451,7 @@ contract BondingCurveTest is Test {
         bondingCurve.configurePool(
             FEE,
             INITIAL_TICK,
-            address(communityToken),
+            address(memeCoin),
             WETH,
             TICK_SPACING,
             POSITION_MANAGER,

@@ -27,7 +27,7 @@ contract BondingCurve is IERC721Receiver, AccessControl {
 
     /// @notice Struct containing community coin details
     /// @dev Packed for optimal storage
-    struct CommunityCoinDeets {
+    struct MemeCoinDeets {
         string name;
         string symbol;
         bool isGraduated;
@@ -39,7 +39,7 @@ contract BondingCurve is IERC721Receiver, AccessControl {
 
     /// @notice Chainlink price feed interface
     AggregatorV3Interface public immutable v3Interface;
-    CommunityCoinDeets public communityCoinDeets;
+    MemeCoinDeets public memeCoinDeets;
 
     /// @notice Current active supply of tokens
     uint256 public activeSupply;
@@ -87,7 +87,7 @@ contract BondingCurve is IERC721Receiver, AccessControl {
         address creatorAddress,
         address _adminAddress
     ) {
-        communityCoinDeets = CommunityCoinDeets({
+        memeCoinDeets = MemeCoinDeets({
             name: name,
             symbol: symbol,
             isGraduated: false,
@@ -106,7 +106,7 @@ contract BondingCurve is IERC721Receiver, AccessControl {
     /// @param usdAmount USD amount to spend
     /// @return success Returns 1 if successful
     function buyToken(uint32 usdAmount) public payable returns (uint256) {
-        CommunityCoinDeets storage listedToken = communityCoinDeets;
+        MemeCoinDeets storage listedToken = memeCoinDeets;
 
         if (listedToken.tokenAddress == address(0))
             revert BC__InvalidTokenAddress();
@@ -158,7 +158,7 @@ contract BondingCurve is IERC721Receiver, AccessControl {
         address _positionManager,
         address poolfactory
     ) external onlyRole(DEFAULT_ADMIN_ROLE) returns (uint256 positionId) {
-        CommunityCoinDeets storage listedToken = communityCoinDeets;
+        MemeCoinDeets storage listedToken = memeCoinDeets;
         if (!listedToken.isGraduated) revert BC__BondingCurveYetToGraduate();
         (address token0, address token1) = newToken < wethAddress
             ? (newToken, wethAddress)
@@ -347,7 +347,7 @@ contract BondingCurve is IERC721Receiver, AccessControl {
      */
     function checkBondingCurveBalance() public view returns (uint256) {
         return
-            TokenBoilerPlate(communityCoinDeets.tokenAddress).balanceOf(
+            TokenBoilerPlate(memeCoinDeets.tokenAddress).balanceOf(
                 address(this)
             );
     }
